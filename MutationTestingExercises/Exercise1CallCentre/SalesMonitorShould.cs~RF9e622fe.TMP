@@ -1,5 +1,4 @@
-﻿using System;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 
@@ -42,21 +41,23 @@ namespace MutationTestingExercises.Exercise1CallCentre
         [Test]
         public void Raise_as_many_alerts_as_listeners()
         {
-            var salesMonitor = new SalesMonitor();
-            int alertCount = new Random().Next(1, 9999);
-            var alertListeners = new List<Mock<Alert>>();
-            for (int i = 0; i < alertCount; i++)
+            var alertListeners = new List<Mock<Alert>>()
             {
-                var alertMock = new Mock<Alert>();
-                alertListeners.Add(alertMock);
-                salesMonitor.AddAlert(alertMock.Object);
-            }
+                new Mock<Alert>(),
+                new Mock<Alert>(),
+                new Mock<Alert>()
+            };
+
+            var salesMonitor = new SalesMonitor();
+            foreach (var alert in alertListeners)
+                salesMonitor.AddAlert(alert);
+
 
             int higherThanThreshHoldValue = 999;
-            salesMonitor.ProcessSale(higherThanThreshHoldValue);
+            _salesMonitor.ProcessSale(higherThanThreshHoldValue);
 
-            foreach(var alertMock in alertListeners)
-                alertMock.Verify(a => a.Raise());
+
+
         }
     }
 }
